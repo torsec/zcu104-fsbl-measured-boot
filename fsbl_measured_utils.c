@@ -76,7 +76,7 @@ int Tpm_Event (uint32_t pcr_number, uint16_t size, uint8_t *data)
 
    // If PCR >= 24 then just ignore the command
    if (pcr_number < 24) {
-	   XFsbl_Printf(DEBUG_INFO, "SLB9670: Sending PCR_Event to PCR #%d\r\n", pcr_number);
+	   XFsbl_Printf(DEBUG_INFO, "TPM: Sending PCR_Event to PCR #%d\r\n", pcr_number);
 // #ifdef FSBL_DEBUG_DETAILED
 // 	   uint8_t PcrValue[32];
 // 	   Tpm_ReadPcr(pcr_number, PcrValue);

@@ -61,7 +61,7 @@
 
 /***************************** Include Files *********************************/
 /* For MEASURED BOOT, include xfsbl_config.h to pick up the
- * SUPPORT_TPM_SLB9670 macro and then include the measured boot
+ * SUPPORT_TPM_SLB9670 macro (now MEASURED_BOOT macro) and then include the measured boot
  * code if necessary
  */
 #include "xfsbl_config.h"
@@ -597,8 +597,8 @@ static u32 XFsbl_PlSignVer(XFsblPs_PlPartition *PartitionParams,
 #ifdef MEASURED_BOOT
 	XFsbl_PrintArray (DEBUG_DETAILED, PartitionHash, XFSBL_HASH_TYPE_SHA3,
 			"PL SHA3-384 DIGEST");
-	Status = Tpm_Event(Tpm_GetPCRforPartition(PartitionParams->PartitionNum),
-			XFSBL_HASH_TYPE_SHA3, PartitionHash);
+	// Status = Tpm_Event(Tpm_GetPCRforPartition(PartitionParams->PartitionNum),
+	// 		XFSBL_HASH_TYPE_SHA3, PartitionHash);
 #endif
 
 	Status = XFSBL_SUCCESS;

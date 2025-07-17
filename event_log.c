@@ -7,22 +7,8 @@
 #include <assert.h>
 #include <errno.h>
 #include <string.h>
-// #include <arch_helpers.h>
-
-// #include <common/bl_common.h>
-// #include <common/debug.h>
-// #include <drivers/auth/crypto_mod.h>
-
 #include "event_log.h"
 #include "crypto_mod.h"
-
-// #if TPM_ALG_ID == TPM_ALG_SHA512
-// #define	CRYPTO_MD_ID	CRYPTO_MD_SHA512
-// #elif TPM_ALG_ID == TPM_ALG_SHA384
-// #define	CRYPTO_MD_ID	CRYPTO_MD_SHA384
-// #elif TPM_ALG_ID == TPM_ALG_SHA256
-// #define	CRYPTO_MD_ID	CRYPTO_MD_SHA256
-// #endif /* TPM_ALG_ID */
 
 #define TPM_ALG_ID TPM_ALG_SHA384
 #define	CRYPTO_MD_ID	CRYPTO_MD_SHA384
@@ -95,15 +81,6 @@ uint8_t *event_log_record(const uint8_t *hash, uint32_t event_type,
 		      const event_log_metadata_t *metadata_ptr, uint8_t *log_ptr2)
 {
     void *ptr = log_ptr2;
-    // if(log_ptr2 == NULL){
-	//     ptr = log_ptr;
-    //     assert(log_ptr != NULL);
-    // }
-    // else{
-    //     ptr = log_ptr2;
-    //     assert(log_ptr2 != NULL);
-    // }
-
 	uint32_t name_len = 0U;
 
 	assert(hash != NULL);
@@ -190,10 +167,6 @@ uint8_t *event_log_write_specid_event(uint8_t *log_ptr2)
 {
 	void *ptr = log_ptr2;
 
-	/* event_log_buf_init() must have been called prior to this. */
-	// assert(log_ptr2 != NULL);
-	// assert(((uintptr_t)log_ptr2 + ID_EVENT_SIZE) < log_end);
-
 	/*
 	 * Add Specification ID Event first
 	 *
@@ -229,9 +202,7 @@ uint8_t *event_log_write_header(uint8_t *log_ptr2)
 	void *ptr;
 
 	log_ptr2 = event_log_write_specid_event(log_ptr2);
-
 	ptr = log_ptr2;
-	// assert(((uintptr_t)log_ptr2 + LOC_EVENT_SIZE) < log_end);
 
 	/*
 	 * The Startup Locality event should be placed in the log before
@@ -271,64 +242,3 @@ uint8_t *event_log_write_header(uint8_t *log_ptr2)
     return log_ptr2;
 }
 
-// int event_log_measure(uintptr_t data_base, uint32_t data_size,
-// 		      unsigned char hash_data[CRYPTO_MD_MAX_SIZE])
-// {
-// 	/* Calculate hash */
-// 	return crypto_mod_calc_hash(CRYPTO_MD_ID,
-// 				    (void *)data_base, data_size, hash_data);
-// }
-
-/*
- * Calculate and write hash of image, configuration data, etc.
- * to Event Log.
- *
- * @param[in] data_base		Address of data
- * @param[in] data_size		Size of data
- * @param[in] data_id		Data ID
- * @param[in] metadata_ptr	Event Log metadata
- * @return:
- *	0 = success
- *    < 0 = error
- */
-// int event_log_measure_and_record(uintptr_t data_base, uint32_t data_size,
-// 				 uint32_t data_id,
-// 				 const event_log_metadata_t *metadata_ptr)
-// {
-// 	unsigned char hash_data[CRYPTO_MD_MAX_SIZE];
-// 	int rc;
-
-// 	assert(metadata_ptr != NULL);
-
-// 	/* Get the metadata associated with this image. */
-// 	while ((metadata_ptr->id != EVLOG_INVALID_ID) &&
-// 		(metadata_ptr->id != data_id)) {
-// 		metadata_ptr++;
-// 	}
-// 	assert(metadata_ptr->id != EVLOG_INVALID_ID);
-
-// 	/* Measure the payload with algorithm selected by EventLog driver */
-// 	rc = event_log_measure(data_base, data_size, hash_data);
-// 	if (rc != 0) {
-// 		return rc;
-// 	}
-
-// 	event_log_record(hash_data, EV_POST_CODE, metadata_ptr);
-
-// 	return 0;
-// }
-
-/*
- * Get current Event Log buffer size i.e. used space of Event Log buffer
- *
- * @param[in]  event_log_start		Base Pointer to Event Log buffer
- *
- * @return: current Size of Event Log buffer
- */
-// size_t event_log_get_cur_size(uint8_t *event_log_start)
-// {
-// 	assert(event_log_start != NULL);
-// 	assert(log_ptr >= event_log_start);
-
-// 	return (size_t)((uintptr_t)log_ptr - (uintptr_t)event_log_start);
-// }

@@ -42,18 +42,17 @@ static void id_event_print(uint8_t **log_addr, size_t *log_size)
 	 * Event content defined as TCG_EfiSpecIDEventStruct.
 	 */
     XFsbl_Printf(DEBUG_INFO, "TCG_EfiSpecIDEvent:\r\n");
-	// LOG_EVENT("TCG_EfiSpecIDEvent:\n");
+	
     XFsbl_Printf(DEBUG_INFO, "  PCRIndex           : %u\r\n", event->header.pcr_index);
-	// LOG_EVENT("  PCRIndex           : %u\n", event->header.pcr_index);
+
 	// assert(event->header.pcr_index == (uint32_t)PCR_0);
 
     XFsbl_Printf(DEBUG_INFO, "  EventType          : %u\r\n", event->header.event_type);
-	// LOG_EVENT("  EventType          : %u\n", event->header.event_type);
+	
 	// assert(event->header.event_type == EV_NO_ACTION);
 
-    // XFsbl_PrintArray(DEBUG_INFO, event->header.digest, 48, "Digest:");
     XFsbl_Printf(DEBUG_INFO, "  Digest             :");
-	// LOG_EVENT("  Digest             :");
+	
 	for (i = 0U; i < sizeof(event->header.digest); ++i) {
 		uint8_t val = event->header.digest[i];
 
@@ -77,32 +76,24 @@ static void id_event_print(uint8_t **log_addr, size_t *log_size)
 	/* EventSize */
 	event_size = event->header.event_size;
     XFsbl_Printf(DEBUG_INFO, " \r\n EventSize          : %u\r\n", event_size);
-	// LOG_EVENT("  EventSize          : %u\n", event_size);
+	
     XFsbl_Printf(DEBUG_INFO, "  Signature          : %s\r\n",
 			event->struct_header.signature);
-	// LOG_EVENT("  Signature          : %s\n",
-			// event->struct_header.signature);
+	
     XFsbl_Printf(DEBUG_INFO, "  PlatformClass      : %u\r\n",
 			event->struct_header.platform_class);
-	// LOG_EVENT("  PlatformClass      : %u\n",
-			// event->struct_header.platform_class);
+	
     XFsbl_Printf(DEBUG_INFO, "  SpecVersion        : %u.%u.%u\r\n",
 			event->struct_header.spec_version_major,
 			event->struct_header.spec_version_minor,
 			event->struct_header.spec_errata);
-	// LOG_EVENT("  SpecVersion        : %u.%u.%u\n",
-			// event->struct_header.spec_version_major,
-			// event->struct_header.spec_version_minor,
-			// event->struct_header.spec_errata);
+	
     XFsbl_Printf(DEBUG_INFO, "  UintnSize          : %u\r\n",
 			event->struct_header.uintn_size);
-	// LOG_EVENT("  UintnSize          : %u\n",
-			// event->struct_header.uintn_size);
 
 	/* NumberOfAlgorithms */
 	number_of_algorithms = event->struct_header.number_of_algorithms;
     XFsbl_Printf(DEBUG_INFO, "  NumberOfAlgorithms : %u\r\n", number_of_algorithms);
-	// LOG_EVENT("  NumberOfAlgorithms : %u\n", number_of_algorithms);
 
 	/* Address of DigestSizes[] */
 	alg_ptr = event->struct_header.digest_size;
@@ -112,10 +103,8 @@ static void id_event_print(uint8_t **log_addr, size_t *log_size)
 	// assert(((uintptr_t)alg_ptr + digest_len) <= (uintptr_t)end_ptr);
 
     XFsbl_Printf(DEBUG_INFO, "  DigestSizes        :\r\n");
-	// LOG_EVENT("  DigestSizes        :\n");
 	for (i = 0U; i < number_of_algorithms; ++i) {
         XFsbl_Printf(DEBUG_INFO, "    #%u AlgorithmId   : SHA", i);
-		// LOG_EVENT("    #%u AlgorithmId   : SHA", i);
 		uint16_t algorithm_id = alg_ptr[i].algorithm_id;
 
 		switch (algorithm_id) {
@@ -137,8 +126,6 @@ static void id_event_print(uint8_t **log_addr, size_t *log_size)
 
         XFsbl_Printf(DEBUG_INFO, "       DigestSize    : %u\r\n",
 					alg_ptr[i].digest_size);
-		// LOG_EVENT("       DigestSize    : %u\n",
-		// 			alg_ptr[i].digest_size);
 	}
 
 	/* Address of VendorInfoSize */
@@ -147,7 +134,6 @@ static void id_event_print(uint8_t **log_addr, size_t *log_size)
 
 	info_size = *info_size_ptr++;
     XFsbl_Printf(DEBUG_INFO,"  VendorInfoSize     : %u\r\n", info_size);
-	// LOG_EVENT("  VendorInfoSize     : %u\n", info_size);
 
 	/* Check VendorInfo end address */
 	// assert(((uintptr_t)info_size_ptr + info_size) <= (uintptr_t)end_ptr);
@@ -157,7 +143,6 @@ static void id_event_print(uint8_t **log_addr, size_t *log_size)
 	// 			digest_len + info_size));
 	if (info_size != 0U) {
         XFsbl_Printf(DEBUG_INFO, "  VendorInfo         :");
-		// LOG_EVENT("  VendorInfo         :");
 		for (i = 0U; i < info_size; ++i) {
             XFsbl_Printf(DEBUG_INFO, " %02x", *info_size_ptr++)
 			// (void)printf(" %02x", *info_size_ptr++);
@@ -270,23 +255,3 @@ static void event2_print(uint8_t **log_addr, size_t *log_size)
 	*log_addr = (uint8_t *)ptr + event_size;
 }
 // #endif	/* LOG_LEVEL >= EVENT_LOG_LEVEL */
-
-/*
- * Print Event Log
- *
- * @param[in]	log_addr	Pointer to Event Log
- * @param[in]	log_size	Event Log size
- */
-// void dump_event_log(uint8_t *log_addr, size_t log_size)
-// {
-// #if LOG_LEVEL >= EVENT_LOG_LEVEL
-	// assert(log_addr != NULL);
-
-	/* Print TCG_EfiSpecIDEvent */
-	// id_event_print(&log_addr, &log_size);
-
-	// while (log_size != 0U) {
-	// 	event2_print(&log_addr, &log_size);
-	// }
-// #endif
-// }
